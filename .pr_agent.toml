@@ -1,0 +1,32 @@
+[config]
+model = "gemini/gemini-3.8-flash"
+fallback_models = []
+custom_model_max_tokens = 1000000
+model_turbo = "gemini/gemini-3.8-flash"
+model_reasoning = "gemini/gemini-3.8-flash"
+git_provider = "github"
+verbosity_level = 0
+temperature = 0.1
+
+[pr_reviewer]
+require_focused_review = true
+require_score = false
+enable_help_text = false
+persistent_comment = false
+extra_instructions = """
+STRICT FILTERING:
+- Focus ONLY on: logic bugs, concurrency/race conditions, data corruption, auth flaws, uncaught exceptions, missing error handling, and performance regressions.
+- SILENTLY IGNORE: formatting, variable naming, import sorting, stylistic patterns, docstrings, and subjective refactoring.
+- Do NOT output compliments or conversational filler.
+- If no critical defects exist, output 'No high-severity defects detected.'
+"""
+
+[pr_description]
+publish_labels = true
+add_custom_labels = ["bug-risk", "security-audit"]
+final_update_message = false
+
+[pr_code_suggestions]
+num_code_suggestions = 3
+rank_suggestions = true
+extra_instructions = "Only suggest fixes for confirmed correctness or security bugs. Ignore nits."
