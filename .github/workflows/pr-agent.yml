@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  gemini_reviewer:
-    name: "🤖 Gemini 3.8 Flash"
+  claude_opus_reviewer:
+    name: "🤖 Claude Opus 5"
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
@@ -20,65 +20,25 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - name: Run Gemini Reviewer (Primary)
-        id: gemini_primary
-        continue-on-error: true
+      - name: Run Claude Opus 5 Reviewer
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_1 }}
-          config.model: "gemini/gemini-3.8-flash"
-          config.fallback_models: '["gemini/gemini-3.7-flash", "gemini/gemini-2.5-flash"]'
-          config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 Gemini 3.8 Flash Reviewer"
-          pr_reviewer.persistent_comment: "false"
-          github_action_config.auto_review: "true"
-          github_action_config.auto_describe: "false"
-          github_action_config.auto_improve: "false"
-
-      - name: Run Gemini Reviewer (Account 2 Failover)
-        if: steps.gemini_primary.outcome == 'failure'
-        uses: qodo-ai/pr-agent@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_2 }}
-          config.model: "gemini/gemini-3.8-flash"
-          config.fallback_models: '["gemini/gemini-3.7-flash", "gemini/gemini-2.5-flash"]'
-          config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 Gemini 3.8 Flash Reviewer"
-          pr_reviewer.persistent_comment: "false"
-          github_action_config.auto_review: "true"
-          github_action_config.auto_describe: "false"
-          github_action_config.auto_improve: "false"
-
-  byteplus_deepseek_reviewer:
-    name: "🤖 BytePlus DeepSeek-V4"
-    if: ${{ !github.event.pull_request.draft }}
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: read
-    steps:
-      - name: Run BytePlus DeepSeek Reviewer
-        uses: qodo-ai/pr-agent@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.ARK_API_KEY }}
-          OPENAI_API_BASE: "https://ark.ap-southeast.bytepluses.com/api/v3"
-          openai.key: ${{ secrets.ARK_API_KEY }}
-          openai.api_base: "https://ark.ap-southeast.bytepluses.com/api/v3"
-          config.model: "openai/deepseek-v4-pro-ga-260813"
+          OPENAI_KEY: ${{ secrets.AGENTROUTER_API_KEY }}
+          OPENAI_API_BASE: "https://agentrouter-proxy.najetareqz.workers.dev/v1"
+          openai.key: ${{ secrets.AGENTROUTER_API_KEY }}
+          openai.api_base: "https://agentrouter-proxy.najetareqz.workers.dev/v1"
+          config.model: "openai/claude-opus-5"
           config.fallback_models: "[]"
           config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 BytePlus DeepSeek-V4 Reviewer"
+          pr_reviewer.review_heading: "🤖 Claude Opus 5 Reviewer"
           pr_reviewer.persistent_comment: "false"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
 
-  alibaba_qwen_reviewer:
-    name: "🤖 Alibaba Qwen-3.8-Max"
+  alibaba_coder_480b_reviewer:
+    name: "🤖 Alibaba Qwen-3 Coder 480B"
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
@@ -86,7 +46,7 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - name: Run Alibaba Qwen Reviewer
+      - name: Run Alibaba Qwen-3 Coder 480B Reviewer
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -94,17 +54,17 @@ jobs:
           OPENAI_API_BASE: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
           openai.key: ${{ secrets.DASHSCOPE_API_KEY }}
           openai.api_base: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-          config.model: "openai/qwen3.8-max"
+          config.model: "openai/qwen3-coder-480b-a35b-instruct"
           config.fallback_models: "[]"
           config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 Alibaba Qwen-3.8-Max Reviewer"
+          pr_reviewer.review_heading: "🤖 Alibaba Qwen-3 Coder 480B Reviewer"
           pr_reviewer.persistent_comment: "false"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
 
-  alibaba_deepseek_reviewer:
-    name: "🤖 Alibaba DeepSeek-V4"
+  alibaba_coder_plus_reviewer:
+    name: "🤖 Alibaba Qwen-3 Coder Plus"
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
@@ -112,33 +72,7 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - name: Run Alibaba DeepSeek Reviewer
-        uses: qodo-ai/pr-agent@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
-          OPENAI_API_BASE: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-          openai.key: ${{ secrets.DASHSCOPE_API_KEY }}
-          openai.api_base: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-          config.model: "openai/deepseek-v4-pro"
-          config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 Alibaba DeepSeek-V4 Reviewer"
-          pr_reviewer.persistent_comment: "false"
-          github_action_config.auto_review: "true"
-          github_action_config.auto_describe: "false"
-          github_action_config.auto_improve: "false"
-
-  alibaba_coder_reviewer:
-    name: "🤖 Alibaba Qwen-3-Coder"
-    if: ${{ !github.event.pull_request.draft }}
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: read
-    steps:
-      - name: Run Alibaba Qwen-3-Coder Reviewer
+      - name: Run Alibaba Qwen-3 Coder Plus Reviewer
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -149,7 +83,33 @@ jobs:
           config.model: "openai/qwen3-coder-plus"
           config.fallback_models: "[]"
           config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 Alibaba Qwen-3-Coder Reviewer"
+          pr_reviewer.review_heading: "🤖 Alibaba Qwen-3 Coder Plus Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  alibaba_kimi_coder_reviewer:
+    name: "🤖 Alibaba Kimi-K2.7-Code"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run Alibaba Kimi-K2.7-Code Reviewer
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          OPENAI_API_BASE: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+          openai.key: ${{ secrets.DASHSCOPE_API_KEY }}
+          openai.api_base: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+          config.model: "openai/kimi-k2.7-code"
+          config.fallback_models: "[]"
+          config.custom_model_max_tokens: "1000000"
+          pr_reviewer.review_heading: "🤖 Alibaba Kimi-K2.7-Code Reviewer"
           pr_reviewer.persistent_comment: "false"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
@@ -176,6 +136,29 @@ jobs:
           config.fallback_models: "[]"
           config.custom_model_max_tokens: "1000000"
           pr_reviewer.review_heading: "🤖 AgentRouter GLM-5.3 Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  gemini_reviewer:
+    name: "🤖 Gemini 3.8 Flash"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run Gemini Reviewer
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_1 }}
+          config.model: "gemini/gemini-3.8-flash"
+          config.fallback_models: '["gemini/gemini-3.7-flash"]'
+          config.custom_model_max_tokens: "1000000"
+          pr_reviewer.review_heading: "🤖 Gemini 3.8 Flash Reviewer"
           pr_reviewer.persistent_comment: "false"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
