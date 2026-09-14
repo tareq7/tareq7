@@ -10,6 +10,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number }}
   cancel-in-progress: false
 
+env:
+  config.max_model_tokens: "250000"
+  config.custom_model_max_tokens: "250000"
+  pr_reviewer.enable_large_pr_chunking: "true"
+  pr_reviewer.max_number_of_calls: "5"
+
 jobs:
   gemini_reviewer:
     name: "🤖 Gemini 3.8 Flash"
@@ -29,24 +35,33 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_1 }}
           config.model: "gemini/gemini-3.8-flash"
           config.fallback_models: '["gemini/gemini-3.7-flash", "gemini/gemini-2.5-flash"]'
+          config.max_model_tokens: "1000000"
           config.custom_model_max_tokens: "1000000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Gemini 3.8 Flash Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
 
       - name: Run Gemini Reviewer (Account 2 Failover)
         if: steps.gemini_primary.outcome == 'failure'
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_2 }}
           config.model: "gemini/gemini-3.8-flash"
           config.fallback_models: '["gemini/gemini-3.7-flash", "gemini/gemini-2.5-flash"]'
+          config.max_model_tokens: "1000000"
           config.custom_model_max_tokens: "1000000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Gemini 3.8 Flash Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
@@ -61,6 +76,7 @@ jobs:
       contents: read
     steps:
       - name: Run Claude Opus 5 Reviewer
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,9 +86,13 @@ jobs:
           openai.api_base: "https://agentrouter-proxy.najetareqz.workers.dev/v1"
           config.model: "openai/claude-opus-5"
           config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
+          config.max_model_tokens: "200000"
+          config.custom_model_max_tokens: "200000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Claude Opus 5 Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
@@ -87,6 +107,7 @@ jobs:
       contents: read
     steps:
       - name: Run AgentRouter GLM-5.3 Reviewer
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -96,15 +117,19 @@ jobs:
           openai.api_base: "https://agentrouter-proxy.najetareqz.workers.dev/v1"
           config.model: "openai/glm-5.3"
           config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
+          config.max_model_tokens: "128000"
+          config.custom_model_max_tokens: "128000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 AgentRouter GLM-5.3 Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
 
-  openrouter_coder_reviewer:
-    name: "🤖 OpenRouter North-Mini Code"
+  orcarouter_free_reviewer:
+    name: "🤖 OrcaRouter Auto-Fallback"
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
@@ -112,19 +137,55 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - name: Run OpenRouter North-Mini Reviewer
+      - name: Run OrcaRouter Auto-Fallback Reviewer
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          OPENAI_API_BASE: "https://agentrouter-proxy.najetareqz.workers.dev/openrouter/v1"
-          openai.key: ${{ secrets.OPENROUTER_API_KEY }}
-          openai.api_base: "https://agentrouter-proxy.najetareqz.workers.dev/openrouter/v1"
-          config.model: "openai/cohere/north-mini-code:free"
-          config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
-          pr_reviewer.review_heading: "🤖 OpenRouter North-Mini Code Reviewer"
+          OPENAI_KEY: ${{ secrets.ORCAROUTER_API_KEY }}
+          OPENAI_API_BASE: "https://api.orcarouter.ai/v1"
+          openai.key: ${{ secrets.ORCAROUTER_API_KEY }}
+          openai.api_base: "https://api.orcarouter.ai/v1"
+          config.model: "openai/orcarouter/free"
+          config.fallback_models: '["openai/deepseek/deepseek-v4-flash-free"]'
+          config.max_model_tokens: "20000"
+          config.custom_model_max_tokens: "20000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 OrcaRouter Auto-Fallback Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  orcarouter_flash_reviewer:
+    name: "🤖 OrcaRouter DeepSeek Flash"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run OrcaRouter DeepSeek Flash Reviewer
+        continue-on-error: true
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.ORCAROUTER_API_KEY }}
+          OPENAI_API_BASE: "https://api.orcarouter.ai/v1"
+          openai.key: ${{ secrets.ORCAROUTER_API_KEY }}
+          openai.api_base: "https://api.orcarouter.ai/v1"
+          config.model: "openai/deepseek/deepseek-v4-flash-free"
+          config.fallback_models: '["openai/orcarouter/free", "openai/z-ai/glm-5.3-flash-free"]'
+          config.max_model_tokens: "20000"
+          config.custom_model_max_tokens: "20000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 OrcaRouter DeepSeek Flash Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
@@ -139,6 +200,7 @@ jobs:
       contents: read
     steps:
       - name: Run Alibaba Qwen-3 Coder 480B Reviewer
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -148,9 +210,13 @@ jobs:
           openai.api_base: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
           config.model: "openai/qwen3-coder-480b-a35b-instruct"
           config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
+          config.max_model_tokens: "256000"
+          config.custom_model_max_tokens: "256000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Alibaba Qwen-3 Coder 480B Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
@@ -165,6 +231,7 @@ jobs:
       contents: read
     steps:
       - name: Run Alibaba Qwen-3 Coder Plus Reviewer
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -174,9 +241,13 @@ jobs:
           openai.api_base: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
           config.model: "openai/qwen3-coder-plus"
           config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
+          config.max_model_tokens: "128000"
+          config.custom_model_max_tokens: "128000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Alibaba Qwen-3 Coder Plus Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
@@ -191,6 +262,7 @@ jobs:
       contents: read
     steps:
       - name: Run Alibaba Kimi-K2.7-Code Reviewer
+        continue-on-error: true
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -200,9 +272,13 @@ jobs:
           openai.api_base: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
           config.model: "openai/kimi-k2.7-code"
           config.fallback_models: "[]"
-          config.custom_model_max_tokens: "1000000"
+          config.max_model_tokens: "256000"
+          config.custom_model_max_tokens: "256000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Alibaba Kimi-K2.7-Code Reviewer"
           pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
