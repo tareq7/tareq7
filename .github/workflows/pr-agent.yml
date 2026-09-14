@@ -66,6 +66,99 @@ jobs:
           github_action_config.auto_describe: "false"
           github_action_config.auto_improve: "false"
 
+  byteplus_deepseek_flash_reviewer:
+    name: "🤖 BytePlus DeepSeek V4 Flash"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run BytePlus DeepSeek V4 Flash Reviewer
+        continue-on-error: true
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.ARK_API_KEY }}
+          OPENAI_API_BASE: "https://ark.ap-southeast.bytepluses.com/api/v3"
+          openai.key: ${{ secrets.ARK_API_KEY }}
+          openai.api_base: "https://ark.ap-southeast.bytepluses.com/api/v3"
+          config.model: "openai/deepseek-v4-flash-ga-260731"
+          config.fallback_models: '["openai/deepseek-v4-pro-260425"]'
+          config.max_model_tokens: "1000000"
+          config.custom_model_max_tokens: "1000000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 BytePlus DeepSeek V4 Flash Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  byteplus_deepseek_pro_reviewer:
+    name: "🤖 BytePlus DeepSeek V4 Pro"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run BytePlus DeepSeek V4 Pro Reviewer
+        continue-on-error: true
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.ARK_API_KEY }}
+          OPENAI_API_BASE: "https://ark.ap-southeast.bytepluses.com/api/v3"
+          openai.key: ${{ secrets.ARK_API_KEY }}
+          openai.api_base: "https://ark.ap-southeast.bytepluses.com/api/v3"
+          config.model: "openai/deepseek-v4-pro-260425"
+          config.fallback_models: '["openai/deepseek-v4-flash-ga-260731"]'
+          config.max_model_tokens: "1000000"
+          config.custom_model_max_tokens: "1000000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 BytePlus DeepSeek V4 Pro Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  byteplus_glm_reviewer:
+    name: "🤖 BytePlus GLM-5.3 Flash"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run BytePlus GLM-5.3 Flash Reviewer
+        continue-on-error: true
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.ARK_API_KEY }}
+          OPENAI_API_BASE: "https://ark.ap-southeast.bytepluses.com/api/v3"
+          openai.key: ${{ secrets.ARK_API_KEY }}
+          openai.api_base: "https://ark.ap-southeast.bytepluses.com/api/v3"
+          config.model: "openai/glm-5-3-flash-260828"
+          config.fallback_models: '["openai/deepseek-v4-flash-ga-260731"]'
+          config.max_model_tokens: "1000000"
+          config.custom_model_max_tokens: "1000000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 BytePlus GLM-5.3 Flash Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
   claude_opus_reviewer:
     name: "🤖 Claude Opus 5"
     if: ${{ !github.event.pull_request.draft }}
@@ -122,68 +215,6 @@ jobs:
           pr_reviewer.enable_large_pr_chunking: "true"
           pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 AgentRouter GLM-5.3 Reviewer"
-          pr_reviewer.persistent_comment: "false"
-          pr_reviewer.publish_error_details: "true"
-          github_action_config.auto_review: "true"
-          github_action_config.auto_describe: "false"
-          github_action_config.auto_improve: "false"
-
-  orcarouter_free_reviewer:
-    name: "🤖 OrcaRouter Auto-Fallback"
-    if: ${{ !github.event.pull_request.draft }}
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: read
-    steps:
-      - name: Run OrcaRouter Auto-Fallback Reviewer
-        continue-on-error: true
-        uses: qodo-ai/pr-agent@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.ORCAROUTER_API_KEY }}
-          OPENAI_API_BASE: "https://api.orcarouter.ai/v1"
-          openai.key: ${{ secrets.ORCAROUTER_API_KEY }}
-          openai.api_base: "https://api.orcarouter.ai/v1"
-          config.model: "openai/orcarouter/free"
-          config.fallback_models: '["openai/deepseek/deepseek-v4-flash-free"]'
-          config.max_model_tokens: "20000"
-          config.custom_model_max_tokens: "20000"
-          pr_reviewer.enable_large_pr_chunking: "true"
-          pr_reviewer.max_number_of_calls: "5"
-          pr_reviewer.review_heading: "🤖 OrcaRouter Auto-Fallback Reviewer"
-          pr_reviewer.persistent_comment: "false"
-          pr_reviewer.publish_error_details: "true"
-          github_action_config.auto_review: "true"
-          github_action_config.auto_describe: "false"
-          github_action_config.auto_improve: "false"
-
-  orcarouter_flash_reviewer:
-    name: "🤖 OrcaRouter DeepSeek Flash"
-    if: ${{ !github.event.pull_request.draft }}
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: read
-    steps:
-      - name: Run OrcaRouter DeepSeek Flash Reviewer
-        continue-on-error: true
-        uses: qodo-ai/pr-agent@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.ORCAROUTER_API_KEY }}
-          OPENAI_API_BASE: "https://api.orcarouter.ai/v1"
-          openai.key: ${{ secrets.ORCAROUTER_API_KEY }}
-          openai.api_base: "https://api.orcarouter.ai/v1"
-          config.model: "openai/deepseek/deepseek-v4-flash-free"
-          config.fallback_models: '["openai/orcarouter/free", "openai/z-ai/glm-5.3-flash-free"]'
-          config.max_model_tokens: "20000"
-          config.custom_model_max_tokens: "20000"
-          pr_reviewer.enable_large_pr_chunking: "true"
-          pr_reviewer.max_number_of_calls: "5"
-          pr_reviewer.review_heading: "🤖 OrcaRouter DeepSeek Flash Reviewer"
           pr_reviewer.persistent_comment: "false"
           pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
@@ -277,6 +308,68 @@ jobs:
           pr_reviewer.enable_large_pr_chunking: "true"
           pr_reviewer.max_number_of_calls: "5"
           pr_reviewer.review_heading: "🤖 Alibaba Kimi-K2.7-Code Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  orcarouter_free_reviewer:
+    name: "🤖 OrcaRouter Auto-Fallback"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run OrcaRouter Auto-Fallback Reviewer
+        continue-on-error: true
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.ORCAROUTER_API_KEY }}
+          OPENAI_API_BASE: "https://api.orcarouter.ai/v1"
+          openai.key: ${{ secrets.ORCAROUTER_API_KEY }}
+          openai.api_base: "https://api.orcarouter.ai/v1"
+          config.model: "openai/orcarouter/free"
+          config.fallback_models: '["openai/deepseek/deepseek-v4-flash-free"]'
+          config.max_model_tokens: "20000"
+          config.custom_model_max_tokens: "20000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 OrcaRouter Auto-Fallback Reviewer"
+          pr_reviewer.persistent_comment: "false"
+          pr_reviewer.publish_error_details: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+
+  orcarouter_flash_reviewer:
+    name: "🤖 OrcaRouter DeepSeek Flash"
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Run OrcaRouter DeepSeek Flash Reviewer
+        continue-on-error: true
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.ORCAROUTER_API_KEY }}
+          OPENAI_API_BASE: "https://api.orcarouter.ai/v1"
+          openai.key: ${{ secrets.ORCAROUTER_API_KEY }}
+          openai.api_base: "https://api.orcarouter.ai/v1"
+          config.model: "openai/deepseek/deepseek-v4-flash-free"
+          config.fallback_models: '["openai/orcarouter/free", "openai/z-ai/glm-5.3-flash-free"]'
+          config.max_model_tokens: "20000"
+          config.custom_model_max_tokens: "20000"
+          pr_reviewer.enable_large_pr_chunking: "true"
+          pr_reviewer.max_number_of_calls: "5"
+          pr_reviewer.review_heading: "🤖 OrcaRouter DeepSeek Flash Reviewer"
           pr_reviewer.persistent_comment: "false"
           pr_reviewer.publish_error_details: "true"
           github_action_config.auto_review: "true"
