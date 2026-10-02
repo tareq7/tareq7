@@ -1,0 +1,2 @@
+'use strict';
+(async()=>{try{const rs=await Promise.all([0,1,2].map(i=>fetch(`./code.${i}.txt`,{cache:'no-store'})));if(rs.some(r=>!r.ok))throw new Error('Application code unavailable');const parts=await Promise.all(rs.map(r=>r.text()));(0,eval)(parts.join(''));}catch(e){console.error(e);document.body.innerHTML='<main style="font-family:system-ui;padding:40px"><h1>Audit application failed to load</h1><p>Please refresh the page.</p></main>';}})();
