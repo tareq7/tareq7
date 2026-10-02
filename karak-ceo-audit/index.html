@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<title>Karak Tea · CEO Sales Audit</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<section id="unlock">
+ <div class="unlock-card"><div class="mark">KT</div><h1>CEO Sales Audit</h1><p>Karak Tea · encrypted executive audit cockpit</p>
+  <div class="field"><input id="keyInput" type="password" autocomplete="off" placeholder="Enter audit access key" aria-label="Audit access key"><button class="primary" id="unlockBtn">Unlock</button></div>
+  <div class="error" id="unlockError"></div>
+  <div class="privacy"><b>Private by design.</b> The workbook is embedded only as AES‑256‑GCM encrypted data. Decryption and analysis happen in this browser; the access key is not stored in the website.</div>
+ </div>
+</section>
+<div id="app" class="hidden">
+<header>
+ <div class="top"><div class="brand"><div class="mark">KT</div><div><strong>Karak Tea · CEO Sales Audit</strong><small id="periodLabel">—</small></div></div>
+ <div class="head-stats"><span class="pill" id="reconPill">—</span><span class="pill bad" id="issuePill">—</span><span class="pill optional" id="contextPill">Company view</span></div>
+ <div class="head-actions"><button class="iconbtn" id="themeBtn" title="Toggle theme">◐</button><button class="ghost" id="lockBtn">Lock</button></div></div>
+ <nav class="nav"><a href="#overview">Overview</a><a href="#trends">Trends</a><a href="#products">Products</a><a href="#channels">Channels</a><a href="#customers">Customers</a><a href="#operations">Operations</a><a href="#profitability">Profitability</a><a href="#issues">Audit issues</a><a href="#transactions">Transactions</a><a href="#quality">Data quality</a></nav>
+</header>
+<main>
+ <section class="filters"><div class="filter-top"><input class="search" id="globalSearch" placeholder="Search order, customer, product, city, AWB…"><button class="ghost filter-toggle" id="filterToggle">Filters</button><button class="ghost" id="resetBtn">Reset</button></div>
+ <div id="filterBody"><div class="filter-grid" id="filterGrid"></div><div class="presets" id="presets"></div><div class="active-filters" id="activeFilters"></div></div></section>
+ <section id="overview" class="section"><div class="section-head"><div><h2>Executive overview</h2><p>Headline measures are tied to their correct source grain and traceable to transactions.</p></div></div><div class="kpi-grid" id="kpis"></div></section>
+ <section class="section"><div class="grid2"><div class="panel"><h3>CEO Audit Summary</h3><div class="desc">Highest-priority records requiring review, ranked by severity and potential financial impact.</div><div class="audit-list" id="auditSummary"></div></div><div class="panel"><h3>Sales vs reported profit</h3><div class="desc">Platform contribution; source “Net profit” is preserved as reported.</div><div class="bars" id="platformProfitBars"></div></div></div></section>
+ <section id="trends" class="section"><div class="section-head"><div><h2>Revenue & profitability</h2><p>Trend view respects the current filter population.</p></div><div class="section-actions"><div class="seg" id="metricSeg"></div><div class="seg" id="grainSeg"></div></div></div><div class="panel"><div class="chart" id="trendChart"><div class="chart-tooltip" id="chartTip"></div></div></div></section>
+ <section id="products" class="section"><div class="section-head"><div><h2>Product performance</h2><p>Revenue, units, orders and reported profitability by normalized product label; source product text is preserved in transaction detail.</p></div></div><div class="grid2"><div class="panel"><h3>Revenue by product</h3><div class="bars" id="productBars"></div></div><div class="panel"><h3>Product audit table</h3><div class="table-wrap"><table class="table" id="productTable"></table></div></div></div></section>
+ <section id="channels" class="section"><div class="section-head"><div><h2>Channel & platform analysis</h2><p>Separates sales generation from reported profit and operating outcomes.</p></div></div><div class="panel"><div class="table-wrap"><table class="table" id="platformTable"></table></div></div></section>
+ <section id="customers" class="section"><div class="section-head"><div><h2>Customer & company analysis</h2><p>Concentration, repeat behavior and profitability. Sensitive details appear only after local decryption.</p></div></div><div class="grid2"><div class="panel"><h3>Top customers by charged value</h3><div class="bars" id="customerBars"></div></div><div class="panel"><h3>Geographic concentration</h3><div class="bars" id="cityBars"></div><div class="footnote">No map is shown because the workbook does not contain reliable coordinates; no location precision is invented.</div></div></div></section>
+ <section id="operations" class="section"><div class="section-head"><div><h2>Payment & fulfillment audit</h2><p>Payment collection, order status, logistics, invoice/AWB completeness and cost signals.</p></div></div><div class="grid3"><div class="panel"><h3>Payment status</h3><div class="bars" id="paymentBars"></div></div><div class="panel"><h3>Order status</h3><div class="bars" id="statusBars"></div></div><div class="panel"><h3>Logistics</h3><div class="bars" id="logisticsBars"></div></div></div></section>
+ <section id="profitability" class="section"><div class="section-head"><div><h2>Profitability audit</h2><p>Source-reported profit is authoritative; alternative cost formulas are checks, not silent corrections.</p></div></div><div class="grid3"><div class="panel"><h3>Profit bridge</h3><div id="profitBridge"></div></div><div class="panel"><h3>Least profitable orders</h3><div class="table-wrap"><table class="table" id="leastProfitTable"></table></div></div><div class="panel"><h3>Most profitable orders</h3><div class="table-wrap"><table class="table" id="mostProfitTable"></table></div></div></div></section>
+ <section id="issues" class="section"><div class="section-head"><div><h2>Audit issues</h2><p>Deterministic business/data checks. Flags indicate records requiring review, not allegations.</p></div><div class="section-actions"><select id="issueSeverity" class="search"><option>All</option><option>Critical</option><option>High</option><option>Medium</option><option>Info</option></select></div></div><div class="panel"><div class="table-wrap"><table class="table" id="issuesTable"></table></div></div></section>
+ <section id="transactions" class="section"><div class="section-head"><div><h2>Full transaction audit</h2><p>Original workbook values and normalized/calculated fields remain distinguishable.</p></div><div class="section-actions"><input class="search" style="width:230px" id="txnSearch" placeholder="Search filtered rows"><button class="ghost" id="exportBtn">Export CSV</button></div></div><div class="panel"><div class="table-wrap"><table class="table" id="txnTable"></table></div><div class="pager"><span id="pageInfo"></span><div><button class="ghost" id="prevPage">Previous</button> <button class="ghost" id="nextPage">Next</button></div></div></div></section>
+ <section id="quality" class="section"><div class="section-head"><div><h2>Data quality audit</h2><p>Completeness and consistency are measured directly; no arbitrary quality score is invented.</p></div></div><div class="dq-grid"><div class="panel"><h3>Missing values</h3><div class="desc">Counts and percentages within the current filtered source-row population.</div><div class="missing-grid" id="missingGrid"></div></div><div class="panel"><h3>Integrity & normalization</h3><div id="qualitySummary"></div></div></div></section>
+</main></div>
+<div id="modal" class="modal hidden" aria-hidden="true"><div class="drawer"><div class="drawer-head"><div><h2 id="drawerTitle">Order</h2><div class="muted" id="drawerSub"></div></div><button class="iconbtn" id="closeDrawer">✕</button></div><div id="drawerBody"></div></div></div>
+<script src="./app.js"></script>
+</body></html>
