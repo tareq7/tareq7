@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tareq7/tareq7/main/assets/profile-banner.png" alt="Tareq Naji Hero Banner" width="100%" style="border-radius: 10px;" />
+
 </p>
 
 <h1 align="center">Tareq Naji</h1>
